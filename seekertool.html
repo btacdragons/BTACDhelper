@@ -1,0 +1,105 @@
+<div id="BTACDhelper-nav" data-action="expand"> <!--The first child of this section will act as the button-->
+  <span data-text-swap="📘">📖</span> <!--"data-text-swap" holds the data for the alternate text, remove this and it's associated JS code when not needed-->
+  <iframe src="https://btacdragons.github.io/BTACDhelper/splash.html" allowtransparency="true" width=100% height=100% id="BTACDhelper"></iframe>
+</div>
+
+<style>
+#BTACDhelper {
+  border: 0;
+}
+
+#BTACDhelper-nav {
+  display: block;
+  position: fixed;
+  box-sizing: border-box;
+  top: 0;
+  left: calc(-1 * var(--nav-width));
+  z-index: 9999; /* Adjust this as needed or remove when unnecessary */
+  padding: .5em 1em .5em 1em;;
+  width: var(--nav-width);
+  height: 100%;
+  text-align: center;
+  background: rgba(34, 17, 45, 0.9);
+  transition: all 0.25s;
+}
+
+@media (max-width: 500px) {
+  #BTACDhelper-nav {
+    width: 100vw;
+  }
+}
+
+#BTACDhelper-nav.open{
+  left: 0;
+}
+
+#BTACDhelper-nav span {
+  font-size: 16px;
+}
+
+#BTACDhelper-nav *:first-child{
+  position: fixed;
+  padding: 0.5em;
+  cursor: pointer;
+  left: 0;
+  bottom: 10px;
+  clear: both;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: black;
+  background-color: #8c2466; /* Color of button */
+  border-radius: 0px 10px 10px 0px; /* Makes button round(er) */
+}
+
+:root {
+  --nav-width: 500px;
+}
+</style>
+
+<script>
+/* Detect text selection */
+function getSelectionText() {
+    var text = "";
+    var activeEl = document.activeElement;
+    var activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+    if (
+      (activeElTagName == "textarea") || (activeElTagName == "input" &&
+      /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
+      (typeof activeEl.selectionStart == "number")
+    ) {
+        text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
+    } else if (window.getSelection) {
+        text = window.getSelection().toString();
+    }
+    return text;
+}
+/* Set iframe src to desired URL */
+document.onmouseup = document.onkeyup = document.onselectionchange = function() {
+  document.getElementById("BTACDhelper").src = "https://btacdragons.com/search.php?addsearch="+ getSelectionText();
+};
+
+/* Menu listener */
+window.addEventListener("load",function(){
+  var nodes = document.querySelectorAll('div[data-action="expand"] *:first-child');
+  for(var i=0; i<nodes.length; i++){
+  nodes[i].addEventListener("click",function(){
+  if(this.parentNode.className == "open")this.parentNode.className = "";
+  else this.parentNode.className = "open";
+  });
+  }
+});
+
+/* Switch menu button text/graphic when clicked */
+var button = document.querySelectorAll("span")[0];
+button.addEventListener('click', function() {
+  if (button.getAttribute("data-text-swap") == button.innerHTML) {
+    button.innerHTML = button.getAttribute("data-text-original");
+  } else {
+    button.setAttribute("data-text-original", button.innerHTML);
+    button.innerHTML = button.getAttribute("data-text-swap");
+  }
+}, false);
+</script>
